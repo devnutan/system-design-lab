@@ -1,6 +1,7 @@
 import express from 'express';
 
 const app = express();
+app.use(express.json());
 const PORT = 3000;
 
 type Order = {
@@ -56,6 +57,35 @@ app.get('/orders/:id', (req, res) => {
   }
 
   res.status(200).json(order);
+});
+
+app.post('/orders', (req, res) => {
+  const { item, quantity } = req.body ?? {};
+
+  if (
+    typeof item !== 'string' ||
+    item.trim().length === 0 ||
+    !Number.isSafeInteger(quantity) ||
+    quantity <= 0
+  ) {
+    res.status(400).json({
+      error: 'Valid item and positive integer quantity are required',
+    });
+    return;
+  }
+
+  const nextId = Math.max(0, ...orders.map((o) => o.id)) + 1;
+
+  const newOrder: Order = {
+    id: nextId,
+    item: item.trim(),
+    quantity,
+    status: 'created',
+  };
+
+  orders.push(newOrder);
+
+  res.status(201).location(`/orders/${newOrder.id}`).json(newOrder);
 });
 
 app.listen(PORT, () => {
