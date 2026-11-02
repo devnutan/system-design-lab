@@ -114,13 +114,45 @@ Date: November 1, 2026
 
 ---
 
-## Next Milestone — Update Orders
 
-Implement PUT /orders/:id.
+## Milestone 5 — Update Orders Using PUT
 
-Topics:
-- PUT vs PATCH
-- Full replacement vs partial updates
-- HTTP idempotency
-- Request validation
-- Error handling
+Date: November 2, 2026
+
+### Completed
+- Implemented PUT /orders/:id.
+- Added order ID validation.
+- Validated item, quantity, and status.
+- Implemented full replacement of editable order fields.
+- Returned HTTP 200 for successful updates.
+- Returned HTTP 400 for invalid requests.
+- Returned HTTP 404 for nonexistent orders.
+
+### Verification
+- Update existing order — PASS
+- Repeat identical PUT — PASS
+- Nonexistent order — PASS
+- Invalid order ID — PASS
+- Missing status — PASS
+- Unsupported status — PASS
+- Zero quantity — PASS
+- Verify existing order remains unchanged — PASS
+
+### Key Learnings
+- PUT replaces the resource representation defined
+  by our API contract.
+- PUT has idempotent HTTP semantics.
+- Route parameters require runtime validation.
+- Invalid requests should not modify existing data.
+- findIndex() identifies the array position to replace.
+
+### Design Considerations
+- Orders are still stored in memory.
+- Updates are not durable across server restarts.
+- Request validation is currently implemented
+  directly in the route handler.
+- Shared validation helpers can reduce duplication.
+
+### Next Milestone
+Implement DELETE /orders/:id.
+

@@ -29,7 +29,8 @@ Repository: https://github.com/devnutan/system-design-lab
 - [x] Implement GET /orders
 - [x] Implement GET /orders/:id
 - [x] Implement POST /orders
-- [ ] Implement PUT/PATCH /orders/:id
+- [x] Implement PUT /orders/:id
+- [ ] Implement PATCH /orders/:id
 - [ ] Implement DELETE /orders/:id
 - [ ] Add automated API tests
 - [ ] Introduce NGINX reverse proxy

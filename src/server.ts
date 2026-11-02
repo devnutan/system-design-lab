@@ -88,6 +88,53 @@ app.post('/orders', (req, res) => {
   res.status(201).location(`/orders/${newOrder.id}`).json(newOrder);
 });
 
+
+app.put('/orders/:id', (req, res) => {
+  const orderId = Number(req.params.id);
+
+  if (!Number.isSafeInteger(orderId) || orderId <= 0) {
+    res.status(400).json({
+      error: 'Invalid order ID. Must be a positive integer.',
+    });
+    return;
+  }
+
+  const orderIndex = orders.findIndex((order) => order.id === orderId);
+
+  if (orderIndex === -1) {
+    res.status(404).json({
+      error: 'Order not found',
+    });
+    return;
+  }
+
+  const { item, quantity, status } = req.body ?? {};
+
+  if (
+    typeof item !== 'string' ||
+    item.trim().length === 0 ||
+    !Number.isSafeInteger(quantity) ||
+    quantity <= 0 ||
+    !['created', 'shipped', 'delivered'].includes(status)
+  ) {
+    res.status(400).json({
+      error: 'Valid item, quantity, and status are required',
+    });
+    return;
+  }
+
+  const updatedOrder: Order = {
+    id: orderId,
+    item: item.trim(),
+    quantity,
+    status,
+  };
+
+  orders[orderIndex] = updatedOrder;
+
+  res.status(200).json(updatedOrder);
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
